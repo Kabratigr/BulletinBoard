@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Announcement Category</title>
+</head>
+<body>
+<form th:action="@{/filter}" method="post">
+    <label for="title">Search by Title:</label>
+    <input type="text" id="title" name="title" th:value="${title}"/>
+    <input type="hidden" id="category" name="category" th:value="${category}"/>
+    <button type="submit">Search</button>
+</form>
+<table>
+    <thead>
+    <tr th:if="${#lists.isEmpty(announcements)}">
+        <th>No announcements available</th>
+    </tr>
+    <tr th:unless="${#lists.isEmpty(announcements)}">
+        <th>Title</th>
+        <th>Category</th>
+        <th>City</th>
+        <th>Description</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="announcement : ${announcements}">
+        <td th:text="${announcement.title}"></td>
+        <td th:text="${announcement.category}"></td>
+        <td th:text="${announcement.city}"></td>
+        <td th:text="${announcement.description}"></td>
+        <td>
+            <form th:action="@{'/details/' + ${announcement.id}}" method="get">
+                <button type="submit">Details</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<form th:action="@{/}" method="get">
+    <button type="submit">Turn Back</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Announcement Details</title>
+</head>
+<body>
+<div>
+    <p>Title: <span th:text="${announcement.title}"></span></p>
+    <p>Category: <span th:text="${announcement.category}"></span></p>
+    <p>City: <span th:text="${announcement.city}"></span></p>
+    <p>Description: <span th:text="${announcement.description}"></span></p>
+</div>
+<form th:action="@{'/delete/' + ${announcement.id}}" method="post">
+    <button type="submit">Delete Announcement</button>
+</form>
+<form th:action="@{/}" method="get">
+    <button type="submit">Turn Back</button>
+</form>
+</body>
+</html>

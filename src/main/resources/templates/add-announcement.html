@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Add Announcement</title>
+</head>
+<body>
+<h2>Add Announcement</h2>
+<form th:action="@{/add}" method="post">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required><br>
+
+    <label for="category">Category:</label>
+    <select id="category" name="category" required>
+        <option value="Work Search">Work Search</option>
+        <option value="Work Offer">Work Offer</option>
+        <option value="Sale">Sale</option>
+        <option value="Purchase">Purchase</option>
+    </select><br>
+
+    <label for="city">City:</label>
+    <input type="text" id="city" name="city" required><br>
+
+    <label for="description">Description:</label><br>
+    <textarea id="description" name="description"></textarea><br>
+
+    <button type="submit">Add Announcement</button>
+</form>
+<form th:action="@{/}" method="get">
+    <button type="submit">Turn Back</button>
+</form>
+</body>
+</html>
