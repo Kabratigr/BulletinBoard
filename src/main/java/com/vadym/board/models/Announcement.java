@@ -1,10 +1,14 @@
-package com.vadym.board.model;
+package com.vadym.board.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,4 +29,20 @@ public class Announcement {
     private String city;
     @Column(name = "description", columnDefinition = "text")
     private String description;
+    @Column(name = "creation_Date")
+    private LocalDateTime creationDate;
+    @Column(name = "preview_Image_Id")
+    private Long previewImageId;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "announcement")
+    private List<Image> images = new ArrayList<>();
+
+    @PrePersist
+    private void init() {
+        creationDate = LocalDateTime.now();
+    }
+
+    public void addAnnouncementImage(Image image) {
+        image.setAnnouncement(this);
+        images.add(image);
+    }
 }

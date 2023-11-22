@@ -1,6 +1,6 @@
 package com.vadym.board.repositories;
 
-import com.vadym.board.model.Announcement;
+import com.vadym.board.models.Announcement;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

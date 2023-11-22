@@ -1,6 +1,6 @@
 package com.vadym.board.controllers;
 
-import com.vadym.board.model.Announcement;
+import com.vadym.board.models.Announcement;
 import com.vadym.board.services.AnnouncementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class AnnouncementController {
     @GetMapping("/details/{id}")
     public String announcementDetails(@PathVariable Long id, Model model) {
         model.addAttribute("announcement", announcementService.getAnnouncementById(id));
+        model.addAttribute("images", announcementService.getAnnouncementById(id).getImages());
         return "announcement-details";
     }
 
@@ -49,8 +53,11 @@ public class AnnouncementController {
     }
 
     @PostMapping("/add")
-    public String addAnnouncement(Announcement announcement) {
-        announcementService.addAnnouncement(announcement);
+    public String addAnnouncement(@RequestParam("imageFile1") MultipartFile imageFile1,
+                                  @RequestParam("imageFile2") MultipartFile imageFile2,
+                                  @RequestParam("imageFile3") MultipartFile imageFile3,
+                                  Announcement announcement) throws IOException {
+        announcementService.addAnnouncement(announcement, imageFile1, imageFile2, imageFile3);
         return "redirect:/";
     }
 

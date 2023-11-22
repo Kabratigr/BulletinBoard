@@ -5,7 +5,7 @@
 </head>
 <body>
 <h2>Add Announcement</h2>
-<form th:action="@{/add}" method="post">
+<form th:action="@{/add}" method="post" enctype="multipart/form-data">
     <label for="title">Title:</label>
     <input type="text" id="title" name="title" required><br>
 
@@ -19,6 +19,15 @@
 
     <label for="city">City:</label>
     <input type="text" id="city" name="city" required><br>
+
+    <label for="file1">Preview Image</label>
+    <input type="file" id="file1" name="imageFile1"><br>
+
+    <label for="file2">Second Image</label>
+    <input type="file" id="file2" name="imageFile2"><br>
+
+    <label for="file3">Third Image</label>
+    <input type="file" id="file3" name="imageFile3"><br>
 
     <label for="description">Description:</label><br>
     <textarea id="description" name="description"></textarea><br>
