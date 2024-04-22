@@ -25,6 +25,10 @@ public class Announcement {
     private String title;
     @Column(name = "category")
     private String category;
+    @Column(name = "price")
+    private int price;
+    @Column(name = "currency")
+    private String currency;
     @Column(name = "city")
     private String city;
     @Column(name = "description", columnDefinition = "text")

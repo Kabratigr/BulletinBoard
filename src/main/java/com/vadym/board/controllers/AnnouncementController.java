@@ -20,8 +20,15 @@ public class AnnouncementController {
     private final AnnouncementService announcementService;
 
     @GetMapping("/")
-    public String announcements(@RequestParam(name = "title", required = false) String title, Model model) {
-        model.addAttribute("announcements", announcementService.filterByTitle(title));
+    public String announcements(@RequestParam(name = "title", required = false) String title,
+                                @RequestParam(name = "sort", required = false) String sort,
+                                Model model) {
+        if (sort != null && !sort.isEmpty()) {
+            model.addAttribute("announcements", announcementService.sortAnnouncements(
+                    announcementService.getAllAnnouncements(), sort));
+        } else {
+            model.addAttribute("announcements", announcementService.filterByTitle(title));
+        }
         return "main-page";
     }
 
@@ -33,8 +40,15 @@ public class AnnouncementController {
     }
 
     @GetMapping("/filter/{category}")
-    public String announcementCategories(@PathVariable String category, Model model) {
-        model.addAttribute("announcements", announcementService.getAnnouncementsByCategory(category));
+    public String announcementCategories(@PathVariable String category,
+                                         @RequestParam(name = "sort", required = false) String sort,
+                                         Model model) {
+        if (sort != null && !sort.isEmpty()) {
+            model.addAttribute("announcements", announcementService.sortAnnouncements(
+                    announcementService.getAnnouncementsByCategory(category), sort));
+        } else {
+            model.addAttribute("announcements", announcementService.getAnnouncementsByCategory(category));
+        }
         return "announcement-category";
     }
 
@@ -53,9 +67,9 @@ public class AnnouncementController {
     }
 
     @PostMapping("/add")
-    public String addAnnouncement(@RequestParam("imageFile1") MultipartFile imageFile1,
-                                  @RequestParam("imageFile2") MultipartFile imageFile2,
-                                  @RequestParam("imageFile3") MultipartFile imageFile3,
+    public String addAnnouncement(@RequestParam(name = "imageFile1") MultipartFile imageFile1,
+                                  @RequestParam(name = "imageFile2") MultipartFile imageFile2,
+                                  @RequestParam(name = "imageFile3") MultipartFile imageFile3,
                                   Announcement announcement) throws IOException {
         announcementService.addAnnouncement(announcement, imageFile1, imageFile2, imageFile3);
         return "redirect:/";
