@@ -11,6 +11,14 @@
         <img th:src="@{/images/{id}(id=${image.id})}" height="60px" alt=""/><br>
     </div>
     <p>Category: <span th:text="${announcement.category}"></span></p>
+    <p>
+        <span th:if="${announcement.category == 'Work Offer' || announcement.category == 'Work Search'}">
+            Salary: <span th:text="${announcement.price}"></span> <span th:text="${announcement.currency}"></span>
+        </span>
+        <span th:if="${announcement.category == 'Sale' || announcement.category == 'Purchase'}">
+            Price: <span th:text="${announcement.price}"></span> <span th:text="${announcement.currency}"></span>
+        </span>
+    </p>
     <p>City: <span th:text="${announcement.city}"></span></p>
     <p>Description: <span th:text="${announcement.description}"></span></p>
 </div>

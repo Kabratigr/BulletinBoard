@@ -22,6 +22,16 @@
     <form th:action="@{'/filter/Sale'}" method="get">
         <button type="submit">Filter Sales</button>
     </form>
+    <form th:action="@{/}" method="get">
+        <label for="sort">Sort by:</label>
+        <select id="sort" name="sort">
+            <option value="priceAscending">Price: Low to High</option>
+            <option value="priceDescending">Price: High to Low</option>
+            <option value="dateAscending">Date: Old to New</option>
+            <option value="dateDescending">Date: New to Old</option>
+        </select>
+        <button type="submit">Sort</button>
+    </form>
 </div>
 <table>
     <thead>
