@@ -4,6 +4,15 @@
     <title>Announcement Category</title>
 </head>
 <body>
+<div style="display: flex">
+    <a th:if="${user.email == null}" th:href="@{/login}">
+        <button type="submit">Log in</button>
+    </a>
+    <form th:if="${user.email != null}" th:action="@{/logout}" method="post">
+        <button type="submit">Log out</button>
+        <p>Current User: <span th:text="${user.name + ' ' + user.surname}"></span></p>
+    </form>
+</div>
 <form th:action="@{/filter}" method="post">
     <label for="title">Search by Title:</label>
     <input type="text" id="title" name="title" th:value="${title}"/>

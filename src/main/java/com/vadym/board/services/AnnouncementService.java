@@ -2,12 +2,15 @@ package com.vadym.board.services;
 
 import com.vadym.board.models.Announcement;
 import com.vadym.board.models.Image;
+import com.vadym.board.models.User;
 import com.vadym.board.repositories.AnnouncementRepository;
+import com.vadym.board.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +21,8 @@ import java.util.stream.Collectors;
 public class AnnouncementService {
 
     private final AnnouncementRepository announcementRepository;
+
+    private final UserRepository userRepository;
 
     public List<Announcement> filterByTitle(String title) {
         if (title != null && !title.isEmpty()) {
@@ -65,10 +70,12 @@ public class AnnouncementService {
         return announcements;
     }
 
-    public void addAnnouncement(Announcement announcement,
+    public void addAnnouncement(Principal principal,
+                                Announcement announcement,
                                 MultipartFile imageFile1,
                                 MultipartFile imageFile2,
                                 MultipartFile imageFile3) throws IOException {
+        announcement.setUser(getUserByPrincipal(principal));
         Image image1;
         Image image2;
         Image image3;
@@ -92,6 +99,13 @@ public class AnnouncementService {
             announcementFromDb.setPreviewImageId(null);
         }
         announcementRepository.save(announcement);
+    }
+
+    public User getUserByPrincipal(Principal principal) {
+        if (principal == null) {
+            return new User();
+        }
+        return userRepository.findByEmail(principal.getName());
     }
 
     private Image imageConversion(MultipartFile imageFile) throws IOException {

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,7 +23,8 @@ public class AnnouncementController {
     @GetMapping("/")
     public String announcements(@RequestParam(name = "title", required = false) String title,
                                 @RequestParam(name = "sort", required = false) String sort,
-                                Model model) {
+                                Model model, Principal principal) {
+        model.addAttribute("user", announcementService.getUserByPrincipal(principal));
         if (sort != null && !sort.isEmpty()) {
             model.addAttribute("announcements", announcementService.sortAnnouncements(
                     announcementService.getAllAnnouncements(), sort));
@@ -33,16 +35,18 @@ public class AnnouncementController {
     }
 
     @GetMapping("/details/{id}")
-    public String announcementDetails(@PathVariable Long id, Model model) {
+    public String announcementDetails(@PathVariable Long id, Model model, Principal principal) {
         model.addAttribute("announcement", announcementService.getAnnouncementById(id));
         model.addAttribute("images", announcementService.getAnnouncementById(id).getImages());
+        model.addAttribute("user", announcementService.getUserByPrincipal(principal));
         return "announcement-details";
     }
 
     @GetMapping("/filter/{category}")
     public String announcementCategories(@PathVariable String category,
                                          @RequestParam(name = "sort", required = false) String sort,
-                                         Model model) {
+                                         Model model, Principal principal) {
+        model.addAttribute("user", announcementService.getUserByPrincipal(principal));
         if (sort != null && !sort.isEmpty()) {
             model.addAttribute("announcements", announcementService.sortAnnouncements(
                     announcementService.getAnnouncementsByCategory(category), sort));
@@ -70,8 +74,8 @@ public class AnnouncementController {
     public String addAnnouncement(@RequestParam(name = "imageFile1") MultipartFile imageFile1,
                                   @RequestParam(name = "imageFile2") MultipartFile imageFile2,
                                   @RequestParam(name = "imageFile3") MultipartFile imageFile3,
-                                  Announcement announcement) throws IOException {
-        announcementService.addAnnouncement(announcement, imageFile1, imageFile2, imageFile3);
+                                  Announcement announcement, Principal principal) throws IOException {
+        announcementService.addAnnouncement(principal, announcement, imageFile1, imageFile2, imageFile3);
         return "redirect:/";
     }
 
