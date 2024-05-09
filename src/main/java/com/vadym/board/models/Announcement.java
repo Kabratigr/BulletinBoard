@@ -39,6 +39,9 @@ public class Announcement {
     private Long previewImageId;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "announcement")
     private List<Image> images = new ArrayList<>();
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn
+    private User user;
 
     @PrePersist
     private void init() {
