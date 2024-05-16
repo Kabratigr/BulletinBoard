@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Admin Panel</title>
+</head>
+<body>
+<div style="display: flex">
+    <a th:if="${admin.email == null}" th:href="@{/login}">
+        <button type="submit">Log in</button>
+    </a>
+    <form th:if="${admin.email != null}" th:action="@{/logout}" method="post">
+        <button type="submit">Log out</button>
+        <p>Current Admin: <span th:text="${admin.name + ' ' + admin.surname}"></span></p>
+    </form>
+</div>
+<table>
+    <thead>
+    <tr th:if="${#lists.isEmpty(users)}">
+        <th>No users found</th>
+    </tr>
+    <tr th:unless="${#lists.isEmpty(users)}">
+        <th>Id</th>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Email</th>
+        <th>Registration Date</th>
+        <th>Activity</th>
+        <th>Role</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.surname}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${#temporals.format(user.registrationDate, 'dd.MM.yyyy HH:mm')}"></td>
+        <td th:text="${user.isActive}"></td>
+        <td th:text="${user.getRoles()}"></td>
+        <td>
+            <form  th:if="${user.isActive() && admin.email != user.email}" th:action="@{'/user/ban/' + ${user.id}}" method="post">
+                <button type="submit">Ban</button>
+            </form>
+            <form th:if="${!user.isActive() && admin.email != user.email}" th:action="@{'/user/ban/' + ${user.id}}" method="post">
+                <button type="submit">Unban</button>
+            </form>
+            <a th:if="${admin.email != user.email}" th:href="@{'/user/edit/' + ${user.id}}">
+                <button type="submit">Change Role</button>
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a th:href="@{/}">
+    <button type="submit">Back To Main Page</button>
+</a>
+</body>
+</html>

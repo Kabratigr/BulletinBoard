@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -32,5 +33,12 @@ public class UserController {
             return "registration-page";
         }
         return "redirect:/login";
+    }
+
+    @GetMapping("/user/{user}")
+    public String userProfile(@PathVariable(name = "user") User user, Model model) {
+        model.addAttribute("user", user);
+        model.addAttribute("announcements", user.getAnnouncements());
+        return "user-details";
     }
 }
