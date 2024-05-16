@@ -2,6 +2,7 @@ package com.vadym.board.controllers;
 
 import com.vadym.board.models.Announcement;
 import com.vadym.board.services.AnnouncementService;
+import com.vadym.board.services.UtilityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,11 +21,13 @@ public class AnnouncementController {
 
     private final AnnouncementService announcementService;
 
+    private final UtilityService utilityService;
+
     @GetMapping("/")
     public String announcements(@RequestParam(name = "title", required = false) String title,
                                 @RequestParam(name = "sort", required = false) String sort,
                                 Model model, Principal principal) {
-        model.addAttribute("user", announcementService.getUserByPrincipal(principal));
+        model.addAttribute("user", utilityService.getUserByPrincipal(principal));
         if (sort != null && !sort.isEmpty()) {
             model.addAttribute("announcements", announcementService.sortAnnouncements(
                     announcementService.getAllAnnouncements(), sort));
@@ -38,7 +41,7 @@ public class AnnouncementController {
     public String announcementDetails(@PathVariable Long id, Model model, Principal principal) {
         model.addAttribute("announcement", announcementService.getAnnouncementById(id));
         model.addAttribute("images", announcementService.getAnnouncementById(id).getImages());
-        model.addAttribute("user", announcementService.getUserByPrincipal(principal));
+        model.addAttribute("user", utilityService.getUserByPrincipal(principal));
         return "announcement-details";
     }
 
@@ -46,7 +49,7 @@ public class AnnouncementController {
     public String announcementCategories(@PathVariable String category,
                                          @RequestParam(name = "sort", required = false) String sort,
                                          Model model, Principal principal) {
-        model.addAttribute("user", announcementService.getUserByPrincipal(principal));
+        model.addAttribute("user", utilityService.getUserByPrincipal(principal));
         if (sort != null && !sort.isEmpty()) {
             model.addAttribute("announcements", announcementService.sortAnnouncements(
                     announcementService.getAnnouncementsByCategory(category), sort));

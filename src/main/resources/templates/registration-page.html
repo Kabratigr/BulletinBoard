@@ -21,8 +21,8 @@
     <p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></p>
     <button type="submit">Register</button>
 </form>
-<form th:action="@{/}">
-    <button type="submit">To Main Page</button>
-</form>
+<a th:href="@{/}">
+    <button type="submit">Back To Main Page</button>
+</a>
 </body>
 </html>

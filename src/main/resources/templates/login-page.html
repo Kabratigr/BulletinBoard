@@ -14,11 +14,11 @@
 
     <button type="submit">Log in</button>
 </form>
-<form th:action="@{/registration}" method="get">
-    <button type="submit">Registration</button>
-</form>
-<form th:action="@{/}">
-    <button type="submit">To Main Page</button>
-</form>
+<a th:href="@{/registration}">
+    <button type="submit">Registration</button><br>
+</a>
+<a th:href="@{/}">
+    <button type="submit">Back To Main Page</button>
+</a>
 </body>
 </html>

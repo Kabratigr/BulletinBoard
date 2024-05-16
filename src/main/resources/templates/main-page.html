@@ -12,6 +12,9 @@
         <button type="submit">Log out</button>
         <p>Current User: <span th:text="${user.name + ' ' + user.surname}"></span></p>
     </form>
+    <a th:if="${user.isAdmin()}" th:href="@{/admin}">
+        <button type="submit">Admin Panel</button>
+    </a>
 </div>
 <form th:action="@{/}">
     <label for="title">Search by Title:</label>
@@ -69,8 +72,8 @@
     </tr>
     </tbody>
 </table>
-<form th:action="@{/add}">
+<a th:href="@{/add}">
     <button type="submit">Add Announcement</button>
-</form>
+</a>
 </body>
 </html>

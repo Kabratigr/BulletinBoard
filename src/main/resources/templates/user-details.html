@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>User Details</title>
+</head>
+<body>
+<div>
+    <p>Name: <span th:text="${user.name}"></span></p>
+    <p>Surname: <span th:text="${user.surname}"></span></p>
+    <p>Email: <span th:text="${user.email}"></span></p>
+    <p>Registration Date: <span th:text="${#temporals.format(user.registrationDate, 'dd.MM.yyyy HH:mm')}"></span></p>
+</div>
+<table>
+    <thead>
+    <tr th:if="${#lists.isEmpty(announcements)}">
+        <th>User has no Announcements</th>
+    </tr>
+    <tr th:unless="${#lists.isEmpty(announcements)}">
+        <th>Title</th>
+        <th>Category</th>
+        <th>City</th>
+        <th>Description</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="announcement : ${announcements}">
+        <td th:text="${announcement.title}"></td>
+        <td th:text="${announcement.category}"></td>
+        <td th:text="${announcement.city}"></td>
+        <td th:text="${announcement.description}"></td>
+        <td>
+            <form th:action="@{'/details/' + ${announcement.id}}" method="get">
+                <button type="submit">Details</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a th:href="@{/}">
+    <button type="submit">Back To Main Page</button>
+</a>
+</body>
+</html>
