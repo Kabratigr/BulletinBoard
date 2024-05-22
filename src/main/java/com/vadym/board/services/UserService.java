@@ -6,11 +6,9 @@ import com.vadym.board.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,14 +16,27 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
+
+    private final MailSenderService mailSenderService;
 
     public boolean createUser(User user) {
         if (userRepository.findByEmail(user.getEmail()) != null) return false;
-        user.setActive(true);
+        user.setActive(false);
         user.getRoles().add(Role.ROLE_USER);
+        user.setActivationCode(UUID.randomUUID().toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+        if (!StringUtils.isEmpty(user.getEmail())) {
+            String message = String.format(
+                    "Hello, %s! \n" +
+                    "To activate your account, visit next link: http://localhost:8080/activate/%s",
+                    user.getName(),
+                    user.getActivationCode()
+            );
+            mailSenderService.sendMessage(user.getEmail(), "Activation Code", message);
+        }
         return true;
     }
 
@@ -48,6 +59,15 @@ public class UserService {
             }
         }
         userRepository.save(user);
+    }
+
+    public void activateUser(String code) {
+        User user = userRepository.findByActivationCode(code);
+        if (user != null) {
+            user.setActivationCode(null);
+            user.setActive(true);
+            userRepository.save(user);
+        }
     }
 
     public List<User> getAllUsers() {

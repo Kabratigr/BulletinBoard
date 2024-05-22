@@ -41,4 +41,10 @@ public class UserController {
         model.addAttribute("announcements", user.getAnnouncements());
         return "user-details";
     }
+
+    @GetMapping("/activate/{code}")
+    public String activateUser(@PathVariable String code) {
+        userService.activateUser(code);
+        return "redirect:/login";
+    }
 }
