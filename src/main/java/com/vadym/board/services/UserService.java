@@ -24,19 +24,11 @@ public class UserService {
     public boolean createUser(User user) {
         if (userRepository.findByEmail(user.getEmail()) != null) return false;
         user.setActive(false);
-        user.getRoles().add(Role.ROLE_USER);
+        user.getRoles().add(Role.ROLE_ADMIN);
         user.setActivationCode(UUID.randomUUID().toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-        if (!StringUtils.isEmpty(user.getEmail())) {
-            String message = String.format(
-                    "Hello, %s! \n" +
-                    "To activate your account, visit next link: http://localhost:8080/activate/%s",
-                    user.getName(),
-                    user.getActivationCode()
-            );
-            mailSenderService.sendMessage(user.getEmail(), "Activation Code", message);
-        }
+        mailSenderService.sendActivationCode(user);
         return true;
     }
 
@@ -57,6 +49,25 @@ public class UserService {
             if (roles.contains(role)) {
                 user.getRoles().add(Role.valueOf(role));
             }
+        }
+        userRepository.save(user);
+    }
+
+    public void updateProfile(User user, String name, String surname, String email, String password) {
+        if (!user.getName().equals(name) && !StringUtils.isEmpty(name)) {
+            user.setName(name);
+        }
+        if (!user.getSurname().equals(surname) && !StringUtils.isEmpty(surname)) {
+            user.setSurname(surname);
+        }
+        if (!user.getEmail().equals(email) && !StringUtils.isEmpty(email)) {
+            user.setEmail(email);
+            user.setActivationCode(UUID.randomUUID().toString());
+            user.setActive(false);
+            mailSenderService.sendActivationCode(user);
+        }
+        if (!user.getPassword().equals(passwordEncoder.encode(password)) && !StringUtils.isEmpty(password)) {
+            user.setPassword(passwordEncoder.encode(password));
         }
         userRepository.save(user);
     }

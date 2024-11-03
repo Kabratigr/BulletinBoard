@@ -10,8 +10,12 @@
     </a>
     <form th:if="${user.email != null}" th:action="@{/logout}" method="post">
         <button type="submit">Log out</button>
-        <p>Current User: <span th:text="${user.name + ' ' + user.surname}"></span></p>
     </form>
+    <p th:if="${user.email != null}">Current User:
+        <a th:href="@{'/user/' + ${user.id}}">
+            <span th:text="${user.name + ' ' + user.surname}"></span>
+        </a>
+    </p>
     <a th:if="${user.isAdmin()}" th:href="@{/admin}">
         <button type="submit">Admin Panel</button>
     </a>

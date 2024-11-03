@@ -37,6 +37,9 @@
     </tr>
     </tbody>
 </table>
+<a th:if="${authenticatedUser.email == user.email}" th:href="@{'/user/' + ${user.id} + '/edit'}">
+    <button type="submit">Edit Profile</button>
+</a>
 <a th:href="@{/}">
     <button type="submit">Back To Main Page</button>
 </a>

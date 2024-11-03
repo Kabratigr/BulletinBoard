@@ -1,5 +1,6 @@
 package com.vadym.board.services;
 
+import com.vadym.board.models.Announcement;
 import com.vadym.board.models.Image;
 import com.vadym.board.models.User;
 import com.vadym.board.repositories.UserRepository;
@@ -22,6 +23,25 @@ public class UtilityService {
             case "UAH" -> price * 0.025;
             default -> price;
         };
+    }
+
+    public void handleImageFiles(Announcement announcement,
+                                 MultipartFile imageFile1,
+                                 MultipartFile imageFile2,
+                                 MultipartFile imageFile3) throws IOException {
+        if (imageFile1.getSize() != 0) {
+            Image image1 = imageConversion(imageFile1);
+            image1.setPreviewImage(true);
+            announcement.addAnnouncementImage(image1);
+        }
+        if (imageFile2.getSize() != 0) {
+            Image image2 = imageConversion(imageFile2);
+            announcement.addAnnouncementImage(image2);
+        }
+        if (imageFile3.getSize() != 0) {
+            Image image3 = imageConversion(imageFile3);
+            announcement.addAnnouncementImage(image3);
+        }
     }
 
     public Image imageConversion(MultipartFile imageFile) throws IOException {

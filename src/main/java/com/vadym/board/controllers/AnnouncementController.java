@@ -4,6 +4,7 @@ import com.vadym.board.models.Announcement;
 import com.vadym.board.services.AnnouncementService;
 import com.vadym.board.services.UtilityService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +44,29 @@ public class AnnouncementController {
         model.addAttribute("images", announcementService.getAnnouncementById(id).getImages());
         model.addAttribute("user", utilityService.getUserByPrincipal(principal));
         return "announcement-details";
+    }
+
+    @PreAuthorize("#announcement.user.email.equals(authentication.principal.email)")
+    @GetMapping("/{announcement}/edit")
+    public String editAnnouncementForm(@PathVariable(name = "announcement") Announcement announcement, Model model) {
+        model.addAttribute("announcement", announcement);
+        return "announcement-edit";
+    }
+
+    @PreAuthorize("#announcement.user.email.equals(authentication.principal.email)")
+    @PostMapping("/{announcement}/edit")
+    public String editAnnouncement(@RequestParam(name = "title", required = false) String title,
+                                 @RequestParam(name = "category", required = false) String category,
+                                 @RequestParam(name = "price", required = false) int price,
+                                 @RequestParam(name = "currency", required = false) String currency,
+                                 @RequestParam(name = "city", required = false) String city,
+                                 @RequestParam(name = "description", required = false) String description,
+                                 @RequestParam(name = "imageFile1") MultipartFile imageFile1,
+                                 @RequestParam(name = "imageFile2") MultipartFile imageFile2,
+                                 @RequestParam(name = "imageFile3") MultipartFile imageFile3,
+                                 @PathVariable(name = "announcement") Announcement announcement) throws IOException {
+        announcementService.updateAnnouncement(announcement, title, category, price, currency, city, description, imageFile1, imageFile2, imageFile3);
+        return "redirect:/";
     }
 
     @GetMapping("/filter/{category}")
