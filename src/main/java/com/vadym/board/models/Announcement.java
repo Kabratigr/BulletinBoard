@@ -48,6 +48,10 @@ public class Announcement {
         creationDate = LocalDateTime.now();
     }
 
+    public void clearImages() {
+        this.images.clear();
+    }
+
     public void addAnnouncementImage(Image image) {
         image.setAnnouncement(this);
         images.add(image);

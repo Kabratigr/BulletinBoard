@@ -27,9 +27,14 @@
     <p>City: <span th:text="${announcement.city}"></span></p>
     <p>Description: <span th:text="${announcement.description}"></span></p>
 </div>
-<form th:if="${announcement.user.email == user.email}" th:action="@{'/delete/' + ${announcement.id}}" method="post">
-    <button type="submit">Delete Announcement</button>
-</form>
+<div th:if="${announcement.user.email == user.email}">
+    <form th:action="@{'/delete/' + ${announcement.id}}" method="post">
+        <button type="submit">Delete Announcement</button>
+    </form>
+    <a th:href="@{'/' + ${announcement.id} + '/edit'}">
+        <button type="button">Edit Announcement</button>
+    </a>
+</div>
 <a th:href="@{/}">
     <button type="submit">Back To Main Page</button>
 </a>

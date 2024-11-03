@@ -6,6 +6,7 @@ import com.vadym.board.repositories.AnnouncementRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.util.StringUtils;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -66,28 +67,43 @@ public class AnnouncementService {
                                 MultipartFile imageFile2,
                                 MultipartFile imageFile3) throws IOException {
         announcement.setUser(utilityService.getUserByPrincipal(principal));
-        Image image1;
-        Image image2;
-        Image image3;
-        if (imageFile1.getSize() != 0) {
-            image1 = utilityService.imageConversion(imageFile1);
-            image1.setPreviewImage(true);
-            announcement.addAnnouncementImage(image1);
-        }
-        if (imageFile2.getSize() != 0) {
-            image2 = utilityService.imageConversion(imageFile2);
-            announcement.addAnnouncementImage(image2);
-        }
-        if (imageFile3.getSize() != 0) {
-            image3 = utilityService.imageConversion(imageFile3);
-            announcement.addAnnouncementImage(image3);
-        }
+        utilityService.handleImageFiles(announcement, imageFile1, imageFile2, imageFile3);
         Announcement announcementFromDb = announcementRepository.save(announcement);
-        if (!announcementFromDb.getImages().isEmpty()) {
-            announcementFromDb.setPreviewImageId(announcementFromDb.getImages().get(0).getId());
+        updatePreviewImage(announcementFromDb);
+        announcementRepository.save(announcement);
+    }
+
+    private void updatePreviewImage(Announcement announcement) {
+        if (!announcement.getImages().isEmpty()) {
+            announcement.setPreviewImageId(announcement.getImages().get(0).getId());
         } else {
-            announcementFromDb.setPreviewImageId(null);
+            announcement.setPreviewImageId(null);
         }
+    }
+
+    public void updateAnnouncement(Announcement announcement, String title, String category, int price, String currency,
+                                   String city, String description,  MultipartFile imageFile1, MultipartFile imageFile2,
+                                   MultipartFile imageFile3) throws IOException {
+        if (!announcement.getTitle().equals(title) && !StringUtils.isEmpty(title)) {
+            announcement.setTitle(title);
+        }
+        if (!announcement.getCategory().equals(category) && !StringUtils.isEmpty(category)) {
+            announcement.setCategory(category);
+        }
+        if (announcement.getPrice() != price) {
+            announcement.setPrice(price);
+        }
+        if (!announcement.getCurrency().equals(currency) && !StringUtils.isEmpty(currency)) {
+            announcement.setCurrency(currency);
+        }
+        if (!announcement.getCity().equals(city) && !StringUtils.isEmpty(city)) {
+            announcement.setCity(city);
+        }
+        if (!announcement.getDescription().equals(description) && !StringUtils.isEmpty(description)) {
+            announcement.setDescription(description);
+        }
+        announcement.clearImages();
+        utilityService.handleImageFiles(announcement, imageFile1, imageFile2, imageFile3);
         announcementRepository.save(announcement);
     }
 
