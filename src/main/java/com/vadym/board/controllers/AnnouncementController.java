@@ -48,8 +48,9 @@ public class AnnouncementController {
 
     @PreAuthorize("#announcement.user.email.equals(authentication.principal.email)")
     @GetMapping("/{announcement}/edit")
-    public String editAnnouncementForm(@PathVariable(name = "announcement") Announcement announcement, Model model) {
+    public String editAnnouncementForm(@PathVariable(name = "announcement") Announcement announcement, Model model, Principal principal) {
         model.addAttribute("announcement", announcement);
+        model.addAttribute("user", utilityService.getUserByPrincipal(principal));
         return "announcement-edit";
     }
 
@@ -86,14 +87,16 @@ public class AnnouncementController {
     @PostMapping("/filter")
     public String announcementsSearchOnCategoriesPage(@RequestParam(name = "title", required = false) String title,
                                                       @RequestParam(name = "category", required = false) String category,
-                                                      Model model) {
+                                                      Model model, Principal principal) {
         model.addAttribute("announcements", announcementService.filterOnCategoryPage(title, category));
         model.addAttribute("category", category);
+        model.addAttribute("user", utilityService.getUserByPrincipal(principal));
         return "announcement-category";
     }
 
     @GetMapping("/add")
-    public String addAnnouncementPage() {
+    public String addAnnouncementPage(Principal principal, Model model) {
+        model.addAttribute("user", utilityService.getUserByPrincipal(principal));
         return "add-announcement";
     }
 

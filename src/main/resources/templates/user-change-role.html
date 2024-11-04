@@ -1,24 +1,83 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Edit User Roles</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+</head>
 <body>
-<h3>Changing <span th:text="${user.name}"></span></h3>
-<form th:action="@{/user/edit}" method="post">
-    <div th:each="role : ${roles}">
-        <div>
-            <label>
-                <input type="checkbox" th:name="${role}" th:checked="${user.roles.contains(role)}"/>
-                <span th:text="${role}"></span>
-            </label>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" th:href="@{/}">Bulletin Board</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="announcementsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Announcements</a>
+                <div class="dropdown-menu" aria-labelledby="announcementsDropdown">
+                    <a class="dropdown-item" th:href="@{'/filter/Work Offer'}">Work Offers</a>
+                    <a class="dropdown-item" th:href="@{'/filter/Work Search'}">Work Searches</a>
+                    <a class="dropdown-item" th:href="@{'/filter/Purchase'}">Purchases</a>
+                    <a class="dropdown-item" th:href="@{'/filter/Sale'}">Sales</a>
+                    <a class="dropdown-item" th:href="@{/add}">Add Announcement</a>
+                </div>
+            </li>
+            <li class="nav-item" th:if="${user.isAdmin()}">
+                <a class="nav-link" th:href="@{/admin}">Admin Panel</a>
+            </li>
+        </ul>
+        <span class="navbar-text mr-3" th:if="${user.email != null}">
+            Logged in as: <a th:href="@{'/user/' + ${user.id}}" th:text="${user.name + ' ' + user.surname}"></a>
+        </span>
+        <a th:if="${user.email == null}" th:href="@{/login}" class="btn btn-outline-primary ml-2">Log in</a>
+        <!-- Log out with confirmation modal trigger -->
+        <button type="button" class="btn btn-outline-danger ml-2" th:if="${user.email != null}" data-toggle="modal" data-target="#confirmLogoutModal">Log out</button>
+    </div>
+</nav>
+
+<!-- Log out confirmation modal -->
+<div class="modal fade" id="confirmLogoutModal" tabindex="-1" role="dialog" aria-labelledby="confirmLogoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmLogoutModalLabel">Confirm Logout</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to log out?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger">Log out</button>
+                </form>
+            </div>
         </div>
     </div>
-    <input type="hidden" th:value="${user.id}" name="userId"/>
-    <button type="submit">Save</button>
-</form>
-<a th:href="@{/admin}">
-    <button type="submit">Turn Back</button>
-</a>
-<a th:href="@{/}">
-    <button type="submit">Main Page</button>
-</a>
+</div>
+
+<div class="container mt-5">
+    <h3 class="mb-4">Changing Roles for <span th:text="${user.name}"></span></h3>
+    <form th:action="@{/user/edit}" method="post">
+        <div class="form-group">
+            <div th:each="role : ${roles}">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" th:name="${role}" th:checked="${user.roles.contains(role)}" id="role-${role}" />
+                    <label class="form-check-label" th:for="'role-' + ${role}" th:text="${role}"></label>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" th:value="${user.id}" name="userId" />
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
 </body>
 </html>

@@ -2,58 +2,110 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 </head>
 <body>
-<div style="display: flex">
-    <a th:if="${admin.email == null}" th:href="@{/login}">
-        <button type="submit">Log in</button>
-    </a>
-    <form th:if="${admin.email != null}" th:action="@{/logout}" method="post">
-        <button type="submit">Log out</button>
-        <p>Current Admin: <span th:text="${admin.name + ' ' + admin.surname}"></span></p>
-    </form>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" th:href="@{/}">Bulletin Board</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="announcementsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Announcements</a>
+                <div class="dropdown-menu" aria-labelledby="announcementsDropdown">
+                    <a class="dropdown-item" th:href="@{'/filter/Work Offer'}">Work Offers</a>
+                    <a class="dropdown-item" th:href="@{'/filter/Work Search'}">Work Searches</a>
+                    <a class="dropdown-item" th:href="@{'/filter/Purchase'}">Purchases</a>
+                    <a class="dropdown-item" th:href="@{'/filter/Sale'}">Sales</a>
+                    <a class="dropdown-item" th:href="@{/add}">Add Announcement</a>
+                </div>
+            </li>
+            <li class="nav-item" th:if="${admin.isAdmin()}">
+                <a class="nav-link" th:href="@{/admin}">Admin Panel</a>
+            </li>
+        </ul>
+        <span class="navbar-text mr-3" th:if="${admin.email != null}">
+            Logged in as: <a th:href="@{'/user/' + ${admin.id}}" th:text="${admin.name + ' ' + admin.surname}"></a>
+        </span>
+        <a th:if="${admin.email == null}" th:href="@{/login}" class="btn btn-outline-primary ml-2">Log in</a>
+        <!-- Log out with confirmation modal trigger -->
+        <button type="button" class="btn btn-outline-danger ml-2" th:if="${admin.email != null}" data-toggle="modal" data-target="#confirmLogoutModal">Log out</button>
+    </div>
+</nav>
+
+<!-- Log out confirmation modal -->
+<div class="modal fade" id="confirmLogoutModal" tabindex="-1" role="dialog" aria-labelledby="confirmLogoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmLogoutModalLabel">Confirm Logout</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to log out?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger">Log out</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
-<table>
-    <thead>
-    <tr th:if="${#lists.isEmpty(users)}">
-        <th>No users found</th>
-    </tr>
-    <tr th:unless="${#lists.isEmpty(users)}">
-        <th>Id</th>
-        <th>Name</th>
-        <th>Surname</th>
-        <th>Email</th>
-        <th>Registration Date</th>
-        <th>Activity</th>
-        <th>Role</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user : ${users}">
-        <td th:text="${user.id}"></td>
-        <td th:text="${user.name}"></td>
-        <td th:text="${user.surname}"></td>
-        <td th:text="${user.email}"></td>
-        <td th:text="${#temporals.format(user.registrationDate, 'dd.MM.yyyy HH:mm')}"></td>
-        <td th:text="${user.isActive}"></td>
-        <td th:text="${user.getRoles()}"></td>
-        <td>
-            <form  th:if="${user.isActive() && admin.email != user.email}" th:action="@{'/user/ban/' + ${user.id}}" method="post">
-                <button type="submit">Ban</button>
-            </form>
-            <form th:if="${!user.isActive() && admin.email != user.email}" th:action="@{'/user/ban/' + ${user.id}}" method="post">
-                <button type="submit">Unban</button>
-            </form>
-            <a th:if="${admin.email != user.email}" th:href="@{'/user/edit/' + ${user.id}}">
-                <button type="submit">Change Role</button>
-            </a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<a th:href="@{/}">
-    <button type="submit">Back To Main Page</button>
-</a>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Admin Panel</h1>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr th:if="${#lists.isEmpty(users)}">
+            <th colspan="8" class="text-center">No users found</th>
+        </tr>
+        <tr th:unless="${#lists.isEmpty(users)}">
+            <th>Id</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Email</th>
+            <th>Registration Date</th>
+            <th>Activity</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.surname}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${#temporals.format(user.registrationDate, 'dd.MM.yyyy HH:mm')}"></td>
+            <td th:text="${user.isActive}"></td>
+            <td th:text="${user.getRoles()}"></td>
+            <td>
+                <form th:if="${user.isActive() && admin.email != user.email}" th:action="@{'/user/ban/' + ${user.id}}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-warning btn-sm">Ban</button>
+                </form>
+                <form th:if="${!user.isActive() && admin.email != user.email}" th:action="@{'/user/ban/' + ${user.id}}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-success btn-sm">Unban</button>
+                </form>
+                <a th:if="${admin.email != user.email}" th:href="@{'/user/edit/' + ${user.id}}" class="btn btn-info btn-sm">Change Role</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
 </body>
 </html>

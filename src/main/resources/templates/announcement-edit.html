@@ -2,51 +2,128 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Edit Announcement</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<h2>Edit Announcement</h2>
-<form th:action="@{'/' + ${announcement.id} + '/edit'}" method="post" enctype="multipart/form-data">
-    <label for="title">Title:</label>
-    <input type="text" id="title" name="title" th:value="*{announcement.title}" required><br>
 
-    <label for="category">Category:</label>
-    <select id="category" name="category" th:value="*{announcement.category}" required>
-        <option value="Work Search">Work Search</option>
-        <option value="Work Offer">Work Offer</option>
-        <option value="Sale">Sale</option>
-        <option value="Purchase">Purchase</option>
-    </select><br>
-
-    <div>
-        <label for="price">Price:</label>
-        <input type="number" id="price" name="price" th:value="*{announcement.price}" required>
-        <label for="currency">Currency</label>
-        <select id="currency" name="currency" th:value="*{announcement.currency}" required>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="UAH">UAH</option>
-        </select>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" th:href="@{/}">Bulletin Board</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="announcementsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Announcements</a>
+                <div class="dropdown-menu" aria-labelledby="announcementsDropdown">
+                    <a class="dropdown-item" th:href="@{'/filter/Work Offer'}">Work Offers</a>
+                    <a class="dropdown-item" th:href="@{'/filter/Work Search'}">Work Searches</a>
+                    <a class="dropdown-item" th:href="@{'/filter/Purchase'}">Purchases</a>
+                    <a class="dropdown-item" th:href="@{'/filter/Sale'}">Sales</a>
+                    <a class="dropdown-item" th:href="@{/add}">Add Announcement</a>
+                </div>
+            </li>
+            <li class="nav-item" th:if="${user.isAdmin()}">
+                <a class="nav-link" th:href="@{/admin}">Admin Panel</a>
+            </li>
+        </ul>
+        <span class="navbar-text mr-3" th:if="${user.email != null}">
+            Logged in as: <a th:href="@{'/user/' + ${user.id}}" th:text="${user.name + ' ' + user.surname}"></a>
+        </span>
+        <a th:if="${user.email == null}" th:href="@{/login}" class="btn btn-outline-primary ml-2">Log in</a>
+        <!-- Log out with confirmation modal trigger -->
+        <button type="button" class="btn btn-outline-danger ml-2" th:if="${user.email != null}" data-toggle="modal" data-target="#confirmLogoutModal">Log out</button>
     </div>
+</nav>
 
-    <label for="city">City:</label>
-    <input type="text" id="city" name="city" th:value="*{announcement.city}" required><br>
+<!-- Log out confirmation modal -->
+<div class="modal fade" id="confirmLogoutModal" tabindex="-1" role="dialog" aria-labelledby="confirmLogoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmLogoutModalLabel">Confirm Logout</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to log out?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger">Log out</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <label for="file1">Preview Image</label>
-    <input type="file" id="file1" name="imageFile1"><br>
+<div class="container mt-4">
+    <h2>Edit Announcement</h2>
+    <form th:action="@{'/' + ${announcement.id} + '/edit'}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" class="form-control" id="title" name="title" th:value="*{announcement.title}" required>
+        </div>
 
-    <label for="file2">Second Image</label>
-    <input type="file" id="file2" name="imageFile2"><br>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select class="form-control" id="category" name="category" th:value="*{announcement.category}" required>
+                <option value="Work Search">Work Search</option>
+                <option value="Work Offer">Work Offer</option>
+                <option value="Sale">Sale</option>
+                <option value="Purchase">Purchase</option>
+            </select>
+        </div>
 
-    <label for="file3">Third Image</label>
-    <input type="file" id="file3" name="imageFile3"><br>
+        <div class="form-group">
+            <label for="price">Price:</label>
+            <input type="number" class="form-control" id="price" name="price" th:value="*{announcement.price}" required>
+        </div>
 
-    <label for="description">Description:</label><br>
-    <textarea id="description" name="description" th:value="*{announcement.description}"></textarea><br>
+        <div class="form-group">
+            <label for="currency">Currency:</label>
+            <select class="form-control" id="currency" name="currency" th:value="*{announcement.currency}" required>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="UAH">UAH</option>
+            </select>
+        </div>
 
-    <button type="submit">Save</button>
-</form>
-<a th:href="@{/}">
-    <button type="button">Back To Main Page</button>
-</a>
+        <div class="form-group">
+            <label for="city">City:</label>
+            <input type="text" class="form-control" id="city" name="city" th:value="*{announcement.city}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="file1">Preview Image:</label>
+            <input type="file" class="form-control-file" id="file1" name="imageFile1">
+        </div>
+
+        <div class="form-group">
+            <label for="file2">Second Image:</label>
+            <input type="file" class="form-control-file" id="file2" name="imageFile2">
+        </div>
+
+        <div class="form-group">
+            <label for="file3">Third Image:</label>
+            <input type="file" class="form-control-file" id="file3" name="imageFile3">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" name="description" th:value="*{announcement.description}" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+<!-- Include Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

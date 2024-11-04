@@ -2,27 +2,43 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Registration Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 </head>
 <body>
-<h4>Registration</h4>
-<form th:action="@{/registration}" method="post">
-    <label for="firstname">First Name:</label>
-    <input id="firstname" type="text" name="name" required><br><br>
+<div class="container mt-5">
+    <h4 class="mb-4">Registration</h4>
+    <form th:action="@{/registration}" method="post">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="firstname">First Name</label>
+                <input type="text" class="form-control" id="firstname" name="name" placeholder="First Name" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="surname">Surname</label>
+                <input type="text" class="form-control" id="surname" name="surname" placeholder="Surname" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+            </div>
+        </div>
 
-    <label for="surname">Surname:</label>
-    <input id="surname" type="text" name="surname" required><br><br>
+        <!-- Error Message Display -->
+        <p th:if="${errorMessage}" th:text="${errorMessage}" class="text-danger"></p>
 
-    <label for="email">Email:</label>
-    <input id="email" type="email" name="email" required><br><br>
+        <button type="submit" class="btn btn-primary">Register</button>
+        <a th:href="@{/}" class="btn btn-secondary ml-2">Back To Main Page</a>
+    </form>
+</div>
 
-    <label for="password">Password:</label>
-    <input id="password" type="text" name="password" required><br><br>
-
-    <p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></p>
-    <button type="submit">Register</button>
-</form>
-<a th:href="@{/}">
-    <button type="submit">Back To Main Page</button>
-</a>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 </body>
 </html>
