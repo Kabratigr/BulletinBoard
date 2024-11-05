@@ -73,11 +73,11 @@ public class AnnouncementService {
         announcementRepository.save(announcement);
     }
 
-    private void updatePreviewImage(Announcement announcement) {
-        if (!announcement.getImages().isEmpty()) {
-            announcement.setPreviewImageId(announcement.getImages().get(0).getId());
-        } else {
-            announcement.setPreviewImageId(null);
+    public void updatePreviewImage(Announcement announcement) {
+        for (Image image : announcement.getImages()) {
+            if (image.isPreviewImage()) {
+                announcement.setPreviewImageId(image.getId());
+            }
         }
     }
 
@@ -102,8 +102,9 @@ public class AnnouncementService {
         if (!announcement.getDescription().equals(description) && !StringUtils.isEmpty(description)) {
             announcement.setDescription(description);
         }
-        announcement.clearImages();
         utilityService.handleImageFiles(announcement, imageFile1, imageFile2, imageFile3);
+        announcementRepository.save(announcement);
+        updatePreviewImage(announcement);
         announcementRepository.save(announcement);
     }
 
