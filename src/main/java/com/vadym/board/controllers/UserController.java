@@ -1,6 +1,7 @@
 package com.vadym.board.controllers;
 
 import com.vadym.board.models.User;
+import com.vadym.board.services.ReCaptchaService;
 import com.vadym.board.services.UserService;
 import com.vadym.board.services.UtilityService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,8 @@ public class UserController {
 
     private final UtilityService utilityService;
 
+    private final ReCaptchaService reCaptchaService;
+
     @GetMapping("/login")
     public String login() {
         return "login-page";
@@ -33,7 +36,12 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public String createUser(User user, Model model) {
+    public String createUser(@RequestParam("g-recaptcha-response") String reCaptchaResponse,
+                             User user, Model model) {
+        if (!reCaptchaService.validateRecaptcha(reCaptchaResponse)) {
+            model.addAttribute("captchaError", "Invalid Captcha Validation");
+            return "registration-page";
+        }
         if (!userService.createUser(user)) {
             model.addAttribute("errorMessage",
                     "User with " + user.getEmail() + " already exists");
