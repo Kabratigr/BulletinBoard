@@ -19,6 +19,13 @@
                 <input type="text" class="form-control" id="surname" name="surname" placeholder="Surname" required>
             </div>
         </div>
+
+        <div class="form-group">
+            <label for="nickname">Nickname</label>
+            <input type="text" class="form-control" id="nickname" name="nickname" placeholder="Nickname" required>
+            <small class="form-text text-muted">This name will be visible to everyone.</small>
+        </div>
+
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="email">Email</label>
@@ -30,14 +37,10 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-center mb-3">
-            <div class="g-recaptcha" th:attr="data-sitekey=${@reCaptchaConfiguration.getSiteKey()}"></div>
-        </div>
-
-        <div class="text-center">
-            <p th:if="${captchaError}" th:text="${captchaError}" class="text-danger"></p>
-            <p th:if="${errorMessage}" th:text="${errorMessage}" class="text-danger"></p>
-        </div>
+        <!-- Error Message Display -->
+        <p th:if="${emailError}" th:text="${emailError}" class="text-danger"></p>
+        <p th:if="${nickNameError}" th:text="${nickNameError}" class="text-danger"></p>
+        <p th:if="${unknownError}" th:text="${unknownError}" class="text-danger"></p>
 
         <button type="submit" class="btn btn-primary">Register</button>
         <a th:href="@{/}" class="btn btn-secondary ml-2">Back To Main Page</a>

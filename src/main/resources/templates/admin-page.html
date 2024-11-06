@@ -23,12 +23,15 @@
                     <a class="dropdown-item" th:href="@{/add}">Add Announcement</a>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/users/list}">Users List</a>
+            </li>
             <li class="nav-item" th:if="${admin.isAdmin()}">
                 <a class="nav-link" th:href="@{/admin}">Admin Panel</a>
             </li>
         </ul>
         <span class="navbar-text mr-3" th:if="${admin.email != null}">
-            Logged in as: <a th:href="@{'/user/' + ${admin.id}}" th:text="${admin.name + ' ' + admin.surname}"></a>
+            Logged in as: <a th:href="@{'/user/' + ${admin.id}}" th:text="${admin.nickname}"></a>
         </span>
         <a th:if="${admin.email == null}" th:href="@{/login}" class="btn btn-outline-primary ml-2">Log in</a>
         <!-- Log out with confirmation modal trigger -->
@@ -73,6 +76,7 @@
             <th>Id</th>
             <th>Name</th>
             <th>Surname</th>
+            <th>Nickname</th>
             <th>Email</th>
             <th>Registration Date</th>
             <th>Activity</th>
@@ -85,6 +89,7 @@
             <td th:text="${user.id}"></td>
             <td th:text="${user.name}"></td>
             <td th:text="${user.surname}"></td>
+            <td th:text="${user.nickname}"></td>
             <td th:text="${user.email}"></td>
             <td th:text="${#temporals.format(user.registrationDate, 'dd.MM.yyyy HH:mm')}"></td>
             <td th:text="${user.isActive}"></td>

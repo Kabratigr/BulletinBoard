@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Edit User Roles</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <title>Subscriptions List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
 </head>
 <body>
 
@@ -26,16 +26,16 @@
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/users/list}">Users List</a>
             </li>
-            <li class="nav-item" th:if="${user.isAdmin()}">
+            <li class="nav-item" th:if="${authenticatedUser.isAdmin()}">
                 <a class="nav-link" th:href="@{/admin}">Admin Panel</a>
             </li>
         </ul>
-        <span class="navbar-text mr-3" th:if="${user.email != null}">
-            Logged in as: <a th:href="@{'/user/' + ${user.id}}" th:text="${user.nickname}"></a>
+        <span class="navbar-text mr-3" th:if="${authenticatedUser.email != null}">
+            Logged in as: <a th:href="@{'/user/' + ${authenticatedUser.id}}" th:text="${authenticatedUser.nickname}"></a>
         </span>
-        <a th:if="${user.email == null}" th:href="@{/login}" class="btn btn-outline-primary ml-2">Log in</a>
+        <a th:if="${authenticatedUser.email == null}" th:href="@{/login}" class="btn btn-outline-primary ml-2">Log in</a>
         <!-- Log out with confirmation modal trigger -->
-        <button type="button" class="btn btn-outline-danger ml-2" th:if="${user.email != null}" data-toggle="modal" data-target="#confirmLogoutModal">Log out</button>
+        <button type="button" class="btn btn-outline-danger ml-2" th:if="${authenticatedUser.email != null}" data-toggle="modal" data-target="#confirmLogoutModal">Log out</button>
     </div>
 </nav>
 
@@ -62,25 +62,33 @@
     </div>
 </div>
 
-<div class="container mt-5">
-    <h3 class="mb-4">Changing Roles for <span th:text="${user.nickname}"></span></h3>
-    <form th:action="@{/user/edit}" method="post">
-        <div class="form-group">
-            <div th:each="role : ${roles}">
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" th:name="${role}" th:checked="${user.roles.contains(role)}" id="role-${role}" />
-                    <label class="form-check-label" th:for="'role-' + ${role}" th:text="${role}"></label>
-                </div>
-            </div>
+<form th:action="@{'/{type}/{userChannel}/list'(type=${type}, userChannel=${userChannel.id})}" method="get" class="form-inline justify-content-center my-3">
+    <div class="container">
+        <div class="row justify-content-center">
+            <input type="text" name="nickname" class="form-control w-100 col-md-6 mr-2" placeholder="Enter Nickname"
+                   th:value="${nickname}">
+            <button type="submit" class="btn btn-primary">Search</button>
         </div>
-        <input type="hidden" th:value="${user.id}" name="userId" />
-        <button type="submit" class="btn btn-primary">Save</button>
-    </form>
+    </div>
+</form>
+
+<div class="container mt-5">
+    <h3 th:text="${userChannel.nickname}"></h3>
+    <p th:text="${type}"></p>
+
+    <ul class="list-group mt-3">
+        <li class="list-group-item" th:each="user : ${userList}">
+            <a th:href="@{'/user/' + ${user.id}}" th:text="${user.nickname}"></a>
+        </li>
+
+        <li class="list-group-item text-center" th:if="${#lists.isEmpty(userList)}">
+            <span th:text="'No ' + ${type} + ' found'"></span>
+        </li>
+    </ul>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

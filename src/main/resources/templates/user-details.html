@@ -23,12 +23,15 @@
                     <a class="dropdown-item" th:href="@{/add}">Add Announcement</a>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/users/list}">Users List</a>
+            </li>
             <li class="nav-item" th:if="${user.isAdmin()}">
                 <a class="nav-link" th:href="@{/admin}">Admin Panel</a>
             </li>
         </ul>
         <span class="navbar-text mr-3" th:if="${user.email != null}">
-            Logged in as: <a th:href="@{'/user/' + ${user.id}}" th:text="${user.name + ' ' + user.surname}"></a>
+            Logged in as: <a th:href="@{'/user/' + ${user.id}}" th:text="${user.nickname}"></a>
         </span>
         <a th:if="${user.email == null}" th:href="@{/login}" class="btn btn-outline-primary ml-2">Log in</a>
         <!-- Log out with confirmation modal trigger -->
@@ -61,9 +64,41 @@
 
 <div class="container mt-5">
     <h4>User Details</h4>
+
+    <!-- Subscriber and Subscription Counts with Links -->
+    <div class="row mt-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">Subscriptions</div>
+                    <h3 class="card-text">
+                        <a th:href="@{'/subscriptions/' + ${user.id} + '/list'}" th:text="${numberOfSubscriptions}"></a>
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">Subscribers</div>
+                    <h3 class="card-text">
+                        <a th:href="@{'/subscribers/' + ${user.id} + '/list'}" th:text="${numberOfSubscribers}"></a>
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subscribe/Unsubscribe Button -->
+    <div class="mt-4" th:if="${authenticatedUser.email != user.email}">
+        <a th:if="${isSubscriber}" th:href="@{'/unsubscribe/' + ${user.id}}" class="btn btn-info">Unsubscribe</a>
+        <a th:unless="${isSubscriber}" th:href="@{'/subscribe/' + ${user.id}}" class="btn btn-info">Subscribe</a>
+    </div>
+
     <div class="mb-4">
         <p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
         <p><strong>Surname:</strong> <span th:text="${user.surname}"></span></p>
+        <p><strong>Nickname:</strong> <span th:text="${user.nickname}"></span></p>
         <p>
             <strong>Email:</strong>
             <span th:if="${authenticatedUser.email == user.email}" th:text="${user.email}"></span>

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Edit Profile</title>
+    <title>Main Page</title>
+    <!-- Add Bootstrap CSS here -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 </head>
 <body>
@@ -63,38 +64,24 @@
 </div>
 
 <div class="container mt-5">
-    <h4 class="mb-4">Edit Profile</h4>
-    <form th:action="@{'/user/' + ${user.id} + '/edit'}" method="post">
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" name="name" th:value="${user.name}" placeholder="Enter your name" required>
-        </div>
-
-        <div class="form-group">
-            <label for="surname">Surname</label>
-            <input type="text" class="form-control" id="surname" name="surname" th:value="${user.surname}" placeholder="Enter your surname" required>
-        </div>
-
-        <div class="form-group">
-            <label for="nickname">Nickname</label>
-            <input type="text" class="form-control" id="nickname" name="nickname" th:value="${user.nickname}" placeholder="Nickname" required>
-            <small class="form-text text-muted">This name will be visible to everyone.</small>
-        </div>
-
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" name="email" th:value="${user.email}" placeholder="name@example.com" required>
-        </div>
-
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Enter a new password">
-        </div>
-
-        <button type="submit" class="btn btn-primary">Save</button>
+    <h3>Users</h3>
+    <form th:action="@{/users/list}" method="get" class="form-inline justify-content-center my-3">
+        <input type="text" name="nickname" class="form-control w-50 mr-2" placeholder="Search by nickname" th:value="${nickname}">
+        <button type="submit" class="btn btn-primary">Search</button>
     </form>
+
+    <ul class="list-group mt-3">
+        <li class="list-group-item" th:each="user : ${allUsers}">
+            <a th:href="@{'/user/' + ${user.id}}" th:text="${user.nickname}"></a>
+        </li>
+
+        <li class="list-group-item text-center" th:if="${#lists.isEmpty(allUsers)}">
+            <span>No users found</span>
+        </li>
+    </ul>
 </div>
 
+<!-- Add Bootstrap JS and dependencies here -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>

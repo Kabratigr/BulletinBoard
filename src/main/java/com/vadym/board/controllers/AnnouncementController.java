@@ -104,8 +104,9 @@ public class AnnouncementController {
     public String addAnnouncement(@RequestParam(name = "imageFile1") MultipartFile imageFile1,
                                   @RequestParam(name = "imageFile2") MultipartFile imageFile2,
                                   @RequestParam(name = "imageFile3") MultipartFile imageFile3,
+                                  @RequestParam(name = "notifySubscribers", defaultValue = "false") boolean notifySubscribers,
                                   Announcement announcement, Principal principal) throws IOException {
-        announcementService.addAnnouncement(principal, announcement, imageFile1, imageFile2, imageFile3);
+        announcementService.addAnnouncement(principal, announcement, imageFile1, imageFile2, imageFile3, notifySubscribers);
         return "redirect:/";
     }
 

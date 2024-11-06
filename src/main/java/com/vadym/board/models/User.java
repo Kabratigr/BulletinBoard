@@ -27,6 +27,8 @@ public class User implements UserDetails {
     private String name;
     @Column(name = "surname")
     private String surname;
+    @Column(name = "nickname")
+    private String nickname;
     @Column(name = "email", unique = true)
     private String email;
     @Column(name = "activation_Code")
@@ -46,6 +48,14 @@ public class User implements UserDetails {
     private Set<Role> roles = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     private List<Announcement> announcements = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(name = "user_subscriptions", joinColumns = {@JoinColumn(name = "channel_id")},
+            inverseJoinColumns = {@JoinColumn(name = "subscriber_id")})
+    private Set<User> subscribers = new HashSet<>();
+    @ManyToMany
+    @JoinTable(name = "user_subscriptions", joinColumns = {@JoinColumn(name = "subscriber_id")},
+            inverseJoinColumns = {@JoinColumn(name = "channel_id")})
+    private Set<User> subscriptions = new HashSet<>();
 
     @PrePersist
     private void init() {
