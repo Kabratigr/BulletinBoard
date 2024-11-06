@@ -37,7 +37,12 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public String createUser(User user, Model model) {
+    public String createUser(@RequestParam("g-recaptcha-response") String reCaptchaResponse,
+            User user, Model model) {
+        if (!reCaptchaService.validateRecaptcha(reCaptchaResponse)) {
+            model.addAttribute("captchaError", "Invalid Captcha Validation");
+            return "registration-page";
+        }
         UserStatus errorCode = userService.createUser(user);
         switch (errorCode) {
             case EMAIL_EXISTS:

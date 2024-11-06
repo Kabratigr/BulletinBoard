@@ -41,8 +41,14 @@
         <p th:if="${emailError}" th:text="${emailError}" class="text-danger"></p>
         <p th:if="${nickNameError}" th:text="${nickNameError}" class="text-danger"></p>
         <p th:if="${unknownError}" th:text="${unknownError}" class="text-danger"></p>
+        <p th:if="${captchaError}" th:text="${captchaError}" class="text-danger"></p>
 
         <button type="submit" class="btn btn-primary">Register</button>
+
+        <div class="d-flex justify-content-center mb-3">
+            <div class="g-recaptcha" th:attr="data-sitekey=${@reCaptchaConfiguration.getSiteKey()}"></div>
+        </div>
+
         <a th:href="@{/}" class="btn btn-secondary ml-2">Back To Main Page</a>
     </form>
 </div>
