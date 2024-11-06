@@ -29,7 +29,7 @@
             </li>
         </ul>
         <span class="navbar-text mr-3" th:if="${user.email != null}">
-            Logged in as: <a th:href="@{'/user/' + ${user.id}}" th:text="${user.name + ' ' + user.surname}"></a>
+            Logged in as: <a th:href="@{'/user/' + ${user.id}}" th:text="${user.nickname}"></a>
         </span>
         <a th:if="${user.email == null}" th:href="@{/login}" class="btn btn-outline-primary ml-2">Log in</a>
         <!-- Log out with confirmation modal trigger -->
@@ -106,7 +106,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item" th:text="'Price: ' + ${announcement.price} + ' ' + ${announcement.currency}"></li>
                     <li class="list-group-item">
-                        <a th:href="@{'/user/' + ${announcement.user.id}}" th:text="${announcement.user.name + ' ' + announcement.user.surname}" style="text-decoration: none;"></a>
+                        <a th:href="@{'/user/' + ${announcement.user.id}}" th:text="${announcement.user.nickname}" style="text-decoration: none;"></a>
                     </li>
                     <li class="list-group-item" th:text="'Posted on: ' + ${#temporals.format(announcement.creationDate, 'dd.MM.yyyy HH:mm')}"></li>
                 </ul>

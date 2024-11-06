@@ -26,12 +26,15 @@
                     <a class="dropdown-item" th:href="@{/add}">Add Announcement</a>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/users/list}">Users List</a>
+            </li>
             <li class="nav-item" th:if="${user.isAdmin()}">
                 <a class="nav-link" th:href="@{/admin}">Admin Panel</a>
             </li>
         </ul>
         <span class="navbar-text mr-3" th:if="${user.email != null}">
-            Logged in as: <a th:href="@{'/user/' + ${user.id}}" th:text="${user.name + ' ' + user.surname}"></a>
+            Logged in as: <a th:href="@{'/user/' + ${user.id}}" th:text="${user.nickname}"></a>
         </span>
         <a th:if="${user.email == null}" th:href="@{/login}" class="btn btn-outline-primary ml-2">Log in</a>
         <!-- Log out with confirmation modal trigger -->

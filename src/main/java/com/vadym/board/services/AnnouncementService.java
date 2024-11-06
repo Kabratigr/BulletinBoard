@@ -23,6 +23,8 @@ public class AnnouncementService {
 
     private final UtilityService utilityService;
 
+    private final MailSenderService mailSenderService;
+
     public List<Announcement> filterByTitle(String title) {
         if (title != null && !title.isEmpty()) {
             List<String> searchByKeyWords = Arrays.asList(title.split("\\s+"));
@@ -65,12 +67,16 @@ public class AnnouncementService {
                                 Announcement announcement,
                                 MultipartFile imageFile1,
                                 MultipartFile imageFile2,
-                                MultipartFile imageFile3) throws IOException {
+                                MultipartFile imageFile3,
+                                boolean notifySubscribers) throws IOException {
         announcement.setUser(utilityService.getUserByPrincipal(principal));
         utilityService.handleImageFiles(announcement, imageFile1, imageFile2, imageFile3);
         Announcement announcementFromDb = announcementRepository.save(announcement);
         updatePreviewImage(announcementFromDb);
         announcementRepository.save(announcement);
+        if (notifySubscribers) {
+            mailSenderService.notifySubscribers(announcementFromDb);
+        }
     }
 
     public void updatePreviewImage(Announcement announcement) {

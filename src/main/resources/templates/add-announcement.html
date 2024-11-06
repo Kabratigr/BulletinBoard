@@ -26,6 +26,9 @@
                     <a class="dropdown-item" th:href="@{/add}">Add Announcement</a>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/users/list}">Users List</a>
+            </li>
             <li class="nav-item" th:if="${user.isAdmin()}">
                 <a class="nav-link" th:href="@{/admin}">Admin Panel</a>
             </li>
@@ -95,6 +98,11 @@
         <div class="form-group">
             <label for="description">Description:</label>
             <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+        </div>
+
+        <div class="form-group" th:if="${user.subscribers.size() > 0}">
+            <input type="checkbox" id="notifySubscribers" name="notifySubscribers">
+            <label for="notifySubscribers">Notify all subscribers</label>
         </div>
 
         <button type="submit" class="btn btn-primary">Add Announcement</button>
