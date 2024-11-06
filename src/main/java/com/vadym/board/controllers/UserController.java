@@ -2,6 +2,7 @@ package com.vadym.board.controllers;
 
 import com.vadym.board.models.User;
 import com.vadym.board.models.enums.UserStatus;
+import com.vadym.board.services.ReCaptchaService;
 import com.vadym.board.services.UserService;
 import com.vadym.board.services.UtilityService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,8 @@ public class UserController {
     private final UserService userService;
 
     private final UtilityService utilityService;
+
+    private final ReCaptchaService reCaptchaService;
 
     @GetMapping("/login")
     public String login() {
